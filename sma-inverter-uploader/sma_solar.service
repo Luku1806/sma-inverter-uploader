@@ -1,0 +1,14 @@
+[Unit]
+Description= SMA Solar Uploader
+After=network.target
+
+[Service]
+ExecStart=npm run prod
+WorkingDirectory=/home/pi/sma_solar
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
