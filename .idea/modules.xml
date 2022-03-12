@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/frontend/frontend.iml" filepath="$PROJECT_DIR$/frontend/frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sbf-spot/sbf-spot.iml" filepath="$PROJECT_DIR$/sbf-spot/sbf-spot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sma-inverter-handler/sma-inverter-handler.iml" filepath="$PROJECT_DIR$/sma-inverter-handler/sma-inverter-handler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sma-inverter-uploader/sma-iot-hub.iml" filepath="$PROJECT_DIR$/sma-inverter-uploader/sma-iot-hub.iml" />
+    </modules>
+  </component>
+</project>

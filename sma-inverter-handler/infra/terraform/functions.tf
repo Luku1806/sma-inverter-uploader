@@ -24,7 +24,7 @@ resource "azurerm_app_service_plan" "solarfunctions" {
 resource "azurerm_app_service_custom_hostname_binding" "solarfunctions" {
   app_service_name    = azurerm_function_app.solarfunctions.name
   resource_group_name = azurerm_function_app.solarfunctions.resource_group_name
-  hostname            = var.custom_domain
+  hostname            = var.custom_domain_api
 }
 
 resource "azurerm_app_service_managed_certificate" "solarfunctions" {
@@ -51,7 +51,12 @@ resource "azurerm_function_app" "solarfunctions" {
     cors {
       allowed_origins = [
         "https://localhost:9000",
-        "http://localhost:9000"
+        "http://localhost:9000",
+        "https://localhost:3000",
+        "http://localhost:3000",
+        "http://solar.reiningapps.de",
+        "https://solar.reiningapps.de",
+        azurerm_storage_account.webpage.primary_web_endpoint
       ]
     }
   }
