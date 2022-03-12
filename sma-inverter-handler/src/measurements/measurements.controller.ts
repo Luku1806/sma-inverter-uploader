@@ -34,6 +34,18 @@ export class MeasurementsController {
     return this.measurementsService.getAll();
   }
 
+  @Get('/latest')
+  public getLatestForInverter(
+    @Query('inverter') inverterSerial?: string,
+  ): Promise<MeasurementDto | MeasurementDto[]> {
+    if (inverterSerial != undefined) {
+      const serial = parseInt(inverterSerial, 10);
+      return this.measurementsService.getLatestForInverter(serial);
+    }
+
+    return this.measurementsService.getLatestForAll();
+  }
+
   @Get('/count')
   public async countMeasurements(
     @Query('inverter') inverterSerial?: string,

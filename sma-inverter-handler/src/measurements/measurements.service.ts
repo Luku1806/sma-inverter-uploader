@@ -4,20 +4,22 @@ import { MeasurementDto } from './measurement.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { InvertersService } from '../inverters/inverters.service';
 
 @Injectable()
 export class MeasurementsService {
   constructor(
+    private readonly invertersService: InvertersService,
     @InjectModel(MeasurementModel.name)
     private readonly measurementModel: Model<MeasurementModel>,
   ) {}
 
   public async addMeasurement(measurement: MeasurementDto) {
     const result = await this.measurementModel.create(
-      this.toMeasurementModel(measurement),
+      MeasurementsService.toMeasurementModel(measurement),
     );
 
-    return this.toMeasurementDto(result);
+    return MeasurementsService.toMeasurementDto(result);
   }
 
   public async getAll() {
@@ -26,7 +28,7 @@ export class MeasurementsService {
       .sort({ time: 'asc' })
       .exec();
 
-    return measurementDocuments.map(this.toMeasurementDto);
+    return measurementDocuments.map(MeasurementsService.toMeasurementDto);
   }
 
   public async countAll() {
@@ -45,10 +47,24 @@ export class MeasurementsService {
       .sort('time')
       .exec();
 
-    return measurementDocuments.map(this.toMeasurementDto);
+    return measurementDocuments.map(MeasurementsService.toMeasurementDto);
   }
 
-  private toMeasurementDto(document: MeasurementModel): MeasurementDto {
+  public async getLatestForAll(): Promise<MeasurementDto[]> {
+    const serials = await this.invertersService.getAllSerials();
+    return Promise.all(serials.map(this.getLatestForInverter.bind(this)));
+  }
+
+  public async getLatestForInverter(serialNumber: number) {
+    const measurementDocuments = await this.measurementModel
+      .findOne({ inverterSerial: serialNumber })
+      .sort('-time')
+      .exec();
+
+    return MeasurementsService.toMeasurementDto(measurementDocuments);
+  }
+
+  private static toMeasurementDto(document: MeasurementModel): MeasurementDto {
     return {
       inverter: {
         serialNumber: document.inverterSerial,
@@ -93,7 +109,7 @@ export class MeasurementsService {
     };
   }
 
-  private toMeasurementModel(dto: MeasurementDto): MeasurementModel {
+  private static toMeasurementModel(dto: MeasurementDto): MeasurementModel {
     return {
       id: uuidv4(),
       time: dto.time,

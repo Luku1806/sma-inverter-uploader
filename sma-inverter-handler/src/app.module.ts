@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { MeasurementsModule } from './measurements/measurements.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { InvertersModule } from './inverters/inverters.module';
+import { ProductionModule } from './production/production.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
     }),
     MeasurementsModule,
+    InvertersModule,
+    ProductionModule,
   ],
   controllers: [],
   providers: [],
