@@ -14,7 +14,11 @@ import Inverter from "./components/Inverter";
 import Production from "./components/Production";
 import AppHeader from "./components/AppHeader";
 import { useEffect, useState } from "react";
-import { fetchInverters, fetchProduction } from "./api";
+import {
+  fetchInverters,
+  fetchProduction,
+  fetchProductionMeasurements,
+} from "./api";
 
 const drawerWidth = 240;
 
@@ -67,6 +71,7 @@ const mdTheme = createTheme();
 function DashboardContent() {
   const [production, setProduction] = useState(null);
   const [inverters, setInverters] = useState(null);
+  const [measurements, setMeasurements] = useState(null);
 
   useEffect(() => {
     async function loadProduction() {
@@ -94,6 +99,19 @@ function DashboardContent() {
     }
   }, [inverters]);
 
+  useEffect(() => {
+    async function loadMeasurements() {
+      try {
+        const fetchedInverters = await fetchProductionMeasurements();
+        setMeasurements(fetchedInverters);
+      } catch {}
+    }
+
+    if (!measurements) {
+      loadMeasurements();
+    }
+  }, [measurements]);
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>
@@ -114,12 +132,10 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {false && (
-                <Grid item xs={12}>
-                  <Chart />
-                </Grid>
-              )}
               {production && generateProductionTile(production)}
+              {inverters && measurements && (
+                <Chart inverters={inverters} measurements={measurements} />
+              )}
               {inverters && generateInverterTiles(inverters)}
             </Grid>
           </Container>
